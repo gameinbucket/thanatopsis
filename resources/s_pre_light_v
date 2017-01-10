@@ -1,0 +1,26 @@
+uniform mat4 u_mvp;
+uniform mat4 u_mv;
+            
+attribute vec4 a_position;
+attribute vec4 a_color;
+attribute vec2 a_texture;
+attribute vec3 a_normal;
+
+varying vec4 v_color;
+varying vec2 v_texture;
+varying vec3 v_normal;
+varying vec3 v_position;
+varying float v_depth;
+
+const float far = 12.5;
+
+void main()
+{
+	v_color = a_color;
+	v_texture = a_texture;
+	v_normal = a_normal; //vec3(u_mv * vec4(a_normal, 0.0));
+	v_position = a_position.xyz; //vec3(u_mv * a_position);
+	v_depth = (u_mv * a_position).z / far;
+	
+	gl_Position = u_mvp * a_position;            
+}

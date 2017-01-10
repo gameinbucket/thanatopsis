@@ -1,0 +1,32 @@
+precision mediump float;
+
+uniform sampler2D u_texture0;
+
+uniform vec3 u_light_position;
+uniform vec3 u_light_color;
+uniform float u_light_attenuation; //quadratic
+
+varying vec4 v_color;
+varying vec2 v_texture;
+varying vec3 v_normal;
+varying vec3 v_position;
+varying float v_depth;
+
+const vec3 ambient = vec3(1.2);
+
+void main()
+{
+	vec4 color = v_color * texture2D(u_texture0, v_texture);
+	
+	if (color.a == 0.0)
+		discard;
+	
+	float dist = length(u_light_position - v_position);
+    color.rgb *= ambient + u_light_color * max(dot(v_normal, normalize(u_light_position - v_position)), 0.0) * (1.0 / (1.0 + u_light_attenuation * dist * dist));
+    
+    //fog
+    color.rgb *= vec3(1.0 + v_depth) * vec3(1.0 + v_depth);
+    //color.rgb -= -(1.5 * v_depth);
+	
+	gl_FragColor = color;
+}

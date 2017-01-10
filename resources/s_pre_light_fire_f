@@ -1,0 +1,29 @@
+precision mediump float;
+
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+
+uniform float u_offset_y;
+uniform float u_scroll_y1;
+uniform float u_scroll_y2;
+
+varying vec4 v_color;
+varying vec2 v_texture;
+varying vec3 v_normal;
+varying vec3 v_position;
+varying float v_depth;
+
+void main()
+{
+	vec4 color = v_color;
+	
+	//fire effect
+	color *= texture2D(u_texture0, v_texture) * texture2D(u_texture0, vec2(v_texture.x + u_scroll_y2, v_texture.y + u_scroll_y1)) + texture2D(u_texture0, vec2(v_texture.x, v_texture.y + u_scroll_y2));
+	color.a *= texture2D(u_texture1, vec2(v_texture.x, v_texture.y - u_offset_y)).r;
+	
+    //fog
+    color.rgb *= vec3(1.0 + v_depth) * vec3(1.0 + v_depth);
+	
+	gl_FragColor = color;
+}
+	

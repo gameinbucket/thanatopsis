@@ -1,0 +1,23 @@
+precision mediump float;
+            
+uniform sampler2D u_texture0;
+
+uniform float u_width;
+uniform float u_height;
+uniform float u_offset_width;
+uniform float u_offset_height;
+
+const float c_outer_circle = 0.8;
+const float c_inner_circle = 0.0;
+
+void main(void)
+{
+	vec2 screen_pos = vec2((gl_FragCoord.x - u_offset_width) / u_width, (gl_FragCoord.y - u_offset_height) / u_height);
+	
+    vec3 color = texture2D(u_texture0, screen_pos).rgb;
+    float dist = distance(screen_pos, vec2(0.5, 0.5));
+    
+    color *= smoothstep(c_outer_circle, c_inner_circle, dist);
+
+    gl_FragColor = vec4(color, 1.0);
+}

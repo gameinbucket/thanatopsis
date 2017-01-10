@@ -1,0 +1,11 @@
+precision mediump float;
+            
+uniform sampler2D u_texture0;
+            
+uniform float u_width;
+uniform float u_height;
+
+void main()
+{
+	gl_FragColor = texture2D(u_texture0, vec2(gl_FragCoord.x / u_width, gl_FragCoord.y / u_height));
+}
